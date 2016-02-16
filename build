@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -e -x
+
+GO_VER=${GO_VER:-1.5.2}
+
+mkdir go
+
+export GOPATH="$PWD/go"
+
+git clone https://github.com/influxdata/telegraf.git "$PWD"/go/src/github.com/influxdata/telegraf
+docker run -it --rm -v "${GOPATH}":/go -e "GOPATH=/go" -w /go/src/github.com/influxdata/telegraf/ golang:$GO_VER sh -c 'go get -u -f -t ./...'
+
+docker run -it --rm -v "${GOPATH}":/go -e "GOPATH=/go" -w /go/src/github.com/influxdata/telegraf/ golang:$GO_VER-alpine sh -c 'go install ./cmd/telegraf/'
+
+docker build -t asdfsx/telegraf .
