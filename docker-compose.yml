@@ -1,3 +1,7 @@
 telegraf:
-  image: asdfsx/telegraf:latest
+  image: asdfsx/telegraf
   net: host
+  volumes:
+    - ./telegraf.conf:/app/telegraf.conf
+  command: -config /app/telegraf.conf
+  restart: always
