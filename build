@@ -4,13 +4,13 @@ set -e -x
 
 GO_VER=${GO_VER:-1.5.2}
 
-mkdir go
+mkdir -p  go
 
 export GOPATH="$PWD/go"
 
-git clone https://github.com/influxdata/telegraf.git "$PWD"/go/src/github.com/influxdata/telegraf
-docker run -it --rm -v "${GOPATH}":/go -e "GOPATH=/go" -w /go/src/github.com/influxdata/telegraf/ golang:$GO_VER sh -c 'go get -u -f -t ./...'
+git clone https://github.com/asdfsx/telegraf-1.git "$PWD"/go/src/github.com/influxdata/telegraf
+docker run -it --rm -v "${GOPATH}":/go -e "GOPATH=/go" -w /go/src/github.com/influxdata/telegraf golang:$GO_VER sh -c 'go get ./...; go get github.com/sparrc/gdm; /go/bin/gdm restore'
 
-docker run -it --rm -v "${GOPATH}":/go -e "GOPATH=/go" -w /go/src/github.com/influxdata/telegraf/ golang:$GO_VER-alpine sh -c 'go install ./cmd/telegraf/'
+docker run -it --rm -v "${GOPATH}":/go -e "GOPATH=/go" -w /go/src/github.com/influxdata/telegraf/ golang:$GO_VER-alpine sh -c 'go install -ldflags ./...'
 
 docker build -t asdfsx/telegraf .
